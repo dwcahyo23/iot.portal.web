@@ -20,4 +20,4 @@ RUN npm run build
 EXPOSE 3040
 
 # Jalankan aplikasi dengan Vite
-CMD ["npm", "run", "preview"]
+CMD ["npm", "run", "preview", "--", "--port", "3040"]
