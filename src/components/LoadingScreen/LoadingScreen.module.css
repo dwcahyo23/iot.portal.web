@@ -1,0 +1,13 @@
+.loadingScreenBackground {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-color: rgb(255 255 255 / 80%);
+
+	/* Adjust opacity if needed */
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
