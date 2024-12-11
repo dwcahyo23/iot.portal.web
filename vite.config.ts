@@ -26,6 +26,7 @@ export default defineConfig({
     }
   },
   server: {
+    port: 3040,
     proxy: {
       '/mqtt': {
         target: 'http://192.168.192.7:18083', // Backend API yang menerima permintaan
