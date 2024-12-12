@@ -1,5 +1,5 @@
 # Gunakan image Node.js sebagai base image
-FROM node:21
+FROM node:20
 
 # Set working directory di dalam container
 WORKDIR /app
@@ -8,7 +8,7 @@ WORKDIR /app
 COPY package*.json ./
 
 # Install dependencies
-# RUN npm install
+RUN npm install
 
 # Salin semua file dari repositori ke dalam container
 COPY . .
