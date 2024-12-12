@@ -5,7 +5,7 @@ const publicRoute: Routes = [
 	{
 		key: 'qsense-quality-log',
 		path: '/app/qsense/quality/log/:comId/:mcCd',
-		component: lazy(() => import('@renderer/pages/qsense/QualityGuard')),
+		component: lazy(() => import('@renderer/pages/qsense/SenseLog')),
 		authority: []
 	},
 ]

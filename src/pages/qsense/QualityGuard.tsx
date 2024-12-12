@@ -1,135 +1,148 @@
-import { Grid } from '@mantine/core'
-import OkNgCard from '@renderer/components/QSense/OkNgCard'
-import { mqttGet, mqttPost } from '@renderer/services/MqttService'
-import { addNotification } from '@renderer/store'
-import { useEffect, useState } from 'react'
-import { useDispatch } from 'react-redux'
+import { Grid } from "@mantine/core";
+import OkNgCard from "@renderer/components/QSense/OkNgCard";
+import { mqttGet, mqttPost } from "@renderer/services/MqttService";
+import { addNotification } from "@renderer/store";
+import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 
 const QualityGuard = () => {
-  const [subscriptions, setSubscriptions] = useState<MqttSubscription[]>([]) // State to store subscriptions
-  const dispatch = useDispatch()
+  const [subscriptions, setSubscriptions] = useState<MqttSubscription[]>([]); // State to store subscriptions
+  const dispatch = useDispatch();
 
   const fetchSubscriptions = async () => {
     const params = {
       qos: 2,
-      match_topic: 'qSense/Sub/+',
+      match_topic: "qSense/Sub/+",
       page: 1,
       limit: 10,
-      node: 'emqx@172.17.0.3'
-    }
+      node: "emqx@172.17.0.3",
+    };
 
     try {
-      const response = await mqttGet<MqttGetSubscriptionsResponse>('mqtt/api/v5/subscriptions', {
-        params: params
-      })
-      setSubscriptions(response.data)
+      const response = await mqttGet<MqttGetSubscriptionsResponse>(
+        "mqtt/api/v5/subscriptions",
+        {
+          params: params,
+        }
+      );
+      setSubscriptions(response.data);
     } catch (error) {
-      console.error('Error fetching subscriptions:', error)
+      console.error("Error fetching subscriptions:", error);
     }
-  }
+  };
 
   useEffect(() => {
-    fetchSubscriptions()
+    fetchSubscriptions();
 
     const intervalId = setInterval(() => {
-      fetchSubscriptions()
-    }, 15000)
+      fetchSubscriptions();
+    }, 15000);
 
-    return () => clearInterval(intervalId)
-  }, [])
+    return () => clearInterval(intervalId);
+  }, []);
 
   const handleOkClick = async (topic: string, message: string) => {
     const payload = {
-      payload_encoding: 'plain',
+      payload_encoding: "plain",
       topic,
       qos: 2,
       payload: JSON.stringify({
         judge: 1,
-        msg: message
+        msg: message,
       }),
-      retain: false
-    }
+      retain: false,
+    };
 
     try {
-      const response = await mqttPost('/mqtt/api/v5/publish', payload)
+      await mqttPost("/mqtt/api/v5/publish", payload);
       dispatch(
         addNotification({
           id: Math.random().toString(),
           message: `Pesan ${topic} OK terkirim`,
-          title: 'Success',
-          color: 'green'
+          title: "Success",
+          color: "green",
         })
-      )
+      );
     } catch (error) {
       dispatch(
         addNotification({
           id: Math.random().toString(),
           message: `Pesan ${topic} OK error, ${error}`,
-          title: 'Success',
-          color: 'green'
+          title: "Success",
+          color: "green",
         })
-      )
+      );
     }
-  }
+  };
 
   const handleNgClick = async (topic: string, message: string) => {
     const confirmation = window.confirm(
-      'Pastikan input sudah benar, karena akan mengirim sinyal untuk mematikan mesin ?'
-    )
+      "Pastikan input sudah benar, karena akan mengirim sinyal untuk mematikan mesin ?"
+    );
 
     if (!confirmation) {
-      return // Jika pengguna menekan "Cancel", fungsi tidak akan berjalan
+      return; // Jika pengguna menekan "Cancel", fungsi tidak akan berjalan
     }
 
     const payload = {
-      payload_encoding: 'plain',
+      payload_encoding: "plain",
       topic,
       qos: 2,
       payload: JSON.stringify({
         judge: 0,
-        msg: message
+        msg: message,
       }),
-      retain: false
-    }
+      retain: false,
+    };
 
     try {
-      const response = await mqttPost('/mqtt/api/v5/publish', payload)
+      await mqttPost("/mqtt/api/v5/publish", payload);
       dispatch(
         addNotification({
           id: Math.random().toString(),
           message: `Pesan ${topic} NG terkirim`,
-          title: 'Success',
-          color: 'green'
+          title: "Success",
+          color: "green",
         })
-      )
+      );
     } catch (error) {
       dispatch(
         addNotification({
           id: Math.random().toString(),
           message: `Pesan ${topic} NG error, ${error}`,
-          title: 'Success',
-          color: 'green'
+          title: "Success",
+          color: "green",
         })
-      )
+      );
     }
-  }
+  };
 
   const isOnline = (topic: string) => {
-    const topicCount = subscriptions.filter((subscription) => subscription.topic === topic).length
+    const topicCount = subscriptions.filter(
+      (subscription) => subscription.topic === topic
+    ).length;
 
-    return topicCount >= 2
-  }
+    return topicCount >= 2;
+  };
 
   // Get unique machine codes from subscriptions
-  const uniqueTopics = Array.from(new Set(subscriptions.map((subscription) => subscription.topic)))
+  const uniqueTopics = Array.from(
+    new Set(subscriptions.map((subscription) => subscription.topic))
+  );
 
   return (
     <Grid
       type="container"
-      breakpoints={{ xs: '100px', sm: '200px', md: '300px', lg: '400px', xl: '500px' }}
+      breakpoints={{
+        xs: "100px",
+        sm: "200px",
+        md: "300px",
+        lg: "400px",
+        xl: "500px",
+      }}
     >
       {uniqueTopics.map((topic) => {
-        const machineCode = topic.split('/')[2] // Get machine code from topic
+        const machineCode = topic.split("/")[2]; // Get machine code from topic
         return (
           <Grid.Col key={machineCode} span={{ base: 12, md: 6, lg: 3 }}>
             <OkNgCard
@@ -142,10 +155,10 @@ const QualityGuard = () => {
               onOkClick={handleOkClick}
             />
           </Grid.Col>
-        )
+        );
       })}
     </Grid>
-  )
-}
+  );
+};
 
-export default QualityGuard
+export default QualityGuard;

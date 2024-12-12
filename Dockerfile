@@ -17,8 +17,10 @@ COPY . .
 RUN npm run build
 
 # Expose port 3040 (port default Vite)
-EXPOSE 3040
+EXPOSE 5173
 
 # Jalankan aplikasi dengan Vite
-CMD ["npm", "run", "preview", "--", "--port", "3040",  "--host", "0.0.0.0"]
+CMD ["npm", "run", "preview", "--", "--port", "5173",  "--host", "0.0.0.0"]
+# CMD ["npm", "run", "preview"]
+
 

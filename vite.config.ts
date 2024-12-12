@@ -25,8 +25,10 @@ export default defineConfig({
       plugins: [fixReactVirtualized]
     }
   },
-  server: {
-    port: 3040,
+  preview: {
+    host: "0.0.0.0",
+    port: 5173,
+    strictPort: true,
     proxy: {
       '/mqtt': {
         target: 'http://192.168.192.7:18083', // Backend API yang menerima permintaan
@@ -38,6 +40,48 @@ export default defineConfig({
         target: 'http://192.168.192.34:8080', // Backend API yang menerima permintaan
         changeOrigin: true,
         secure: false,
+        rewrite: (path) => path.replace(/^\/threeview/, '')
+      },
+      '/socket': {
+        target: 'ws://192.168.192.7:8083', // Alamat broker MQTT
+        ws: true,
+        changeOrigin: true,
+        secure: false,
+        rewrite: (path) => path.replace(/^\/socket/, '/mqtt'), // Hapus prefix '/mqtt',        
+      },
+    }
+  },
+  server: {
+    host: "0.0.0.0",
+    port: 5173,
+    strictPort: true,
+    proxy: {
+      '/mqtt': {
+        target: 'http://192.168.192.7:18083', // Backend API yang menerima permintaan
+        changeOrigin: true,
+        secure: false,
+        // configure: (proxy, options) => {
+        //   proxy.on('proxyReq', (proxyReq, req, res, options) => {
+        //     console.log('Requesting:', req.method, req.url);
+        //   })
+        //   proxy.on('proxyRes', (proxyRes, req, res) => {
+        //     console.log('Received:', proxyRes.statusCode, req.url);
+        //   })
+        // },
+        rewrite: (path) => path.replace(/^\/mqtt/, '')
+      },
+      '/threeview': {
+        target: 'http://192.168.192.34:8080', // Backend API yang menerima permintaan
+        changeOrigin: true,
+        secure: false,
+        // configure: (proxy, options) => {
+        //   proxy.on('proxyReq', (proxyReq, req, res, options) => {
+        //     console.log('Requesting:', req.method, req.url);
+        //   })
+        //   proxy.on('proxyRes', (proxyRes, req, res) => {
+        //     console.log('Received:', proxyRes.statusCode, req.url);
+        //   })
+        // },
         rewrite: (path) => path.replace(/^\/threeview/, '')
       },
       '/socket': {
