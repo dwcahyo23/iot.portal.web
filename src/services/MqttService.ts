@@ -3,7 +3,7 @@ import axios, { AxiosInstance, AxiosRequestConfig } from 'axios'
 
 const createMqttService = (): AxiosInstance => {
   const axiosInstance = axios.create({
-    baseURL: 'http://localhost:5173',
+    // baseURL: 'http://localhost:5173',
     headers: {
       Accept: '*/*',
       'Content-Type': 'application/json'

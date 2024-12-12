@@ -2,7 +2,7 @@ import axios from 'axios'
 
 const ThreeViewService = axios.create({
   timeout: 60000,
-  baseURL: 'http://localhost:5173',
+  // baseURL: 'http://localhost:5173',
   headers: {
     language: 'EN'
   }
