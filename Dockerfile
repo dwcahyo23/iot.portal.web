@@ -21,6 +21,7 @@ EXPOSE 3040
 
 # Jalankan aplikasi dengan Vite
 # CMD ["npm", "run", "preview", "--", "--port", "5173",  "--host", "0.0.0.0"]
+
 CMD ["npm", "run", "preview"]
 
 
