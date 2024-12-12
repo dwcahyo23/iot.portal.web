@@ -8,7 +8,7 @@ WORKDIR /app
 COPY package*.json ./
 
 # Install dependencies
-RUN npm install
+# RUN npm install
 
 # Salin semua file dari repositori ke dalam container
 COPY . .
