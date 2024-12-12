@@ -4,9 +4,10 @@ import { mqttGet, mqttPost } from "@renderer/services/MqttService";
 import { addNotification } from "@renderer/store";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
+import { MqttGetSubscriptionsResponse, MqttSubscription } from "./mqtt.types";
 
 const QualityGuard = () => {
-  const [subscriptions, setSubscriptions] = useState<MqttSubscription[]>([]); // State to store subscriptions
+  const [subscriptions, setSubscriptions] = useState<MqttSubscription[]>([]); // Ensure initial state is an array
   const dispatch = useDispatch();
 
   const fetchSubscriptions = async () => {
@@ -21,13 +22,12 @@ const QualityGuard = () => {
     try {
       const response = await mqttGet<MqttGetSubscriptionsResponse>(
         "mqtt/api/v5/subscriptions",
-        {
-          params: params,
-        }
+        { params }
       );
-      setSubscriptions(response.data);
+      setSubscriptions(response.data || []); // Ensure response data is valid
     } catch (error) {
       console.error("Error fetching subscriptions:", error);
+      setSubscriptions([]); // Reset to empty array on error
     }
   };
 
@@ -68,8 +68,8 @@ const QualityGuard = () => {
         addNotification({
           id: Math.random().toString(),
           message: `Pesan ${topic} OK error, ${error}`,
-          title: "Success",
-          color: "green",
+          title: "Error",
+          color: "red",
         })
       );
     }
@@ -77,11 +77,11 @@ const QualityGuard = () => {
 
   const handleNgClick = async (topic: string, message: string) => {
     const confirmation = window.confirm(
-      "Pastikan input sudah benar, karena akan mengirim sinyal untuk mematikan mesin ?"
+      "Pastikan input sudah benar, karena akan mengirim sinyal untuk mematikan mesin?"
     );
 
     if (!confirmation) {
-      return; // Jika pengguna menekan "Cancel", fungsi tidak akan berjalan
+      return; // Cancel execution if user declines
     }
 
     const payload = {
@@ -110,24 +110,23 @@ const QualityGuard = () => {
         addNotification({
           id: Math.random().toString(),
           message: `Pesan ${topic} NG error, ${error}`,
-          title: "Success",
-          color: "green",
+          title: "Error",
+          color: "red",
         })
       );
     }
   };
 
   const isOnline = (topic: string) => {
-    const topicCount = subscriptions.filter(
+    const topicCount = subscriptions?.filter(
       (subscription) => subscription.topic === topic
     ).length;
-
     return topicCount >= 2;
   };
 
   // Get unique machine codes from subscriptions
   const uniqueTopics = Array.from(
-    new Set(subscriptions.map((subscription) => subscription.topic))
+    new Set(subscriptions?.map((subscription) => subscription.topic) || [])
   );
 
   return (

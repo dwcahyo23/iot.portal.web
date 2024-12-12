@@ -1,5 +1,5 @@
 // Define types for the response data
-interface MqttSubscription {
+export interface MqttSubscription {
   node: string
   nl: number
   clientid: string
@@ -11,7 +11,7 @@ interface MqttSubscription {
 }
 
 // Define the response structure
-interface MqttGetSubscriptionsResponse {
+export interface MqttGetSubscriptionsResponse {
   data: MqttSubscription[] // Array of subscriptions
   meta: {
     limit: number // Limit of results
@@ -19,3 +19,42 @@ interface MqttGetSubscriptionsResponse {
     hasnext: boolean // Whether there is a next page
   }
 }
+
+
+export interface OkNgCardProps {
+  machineCode: string
+  machineName: string
+  topic: string
+  online: boolean
+  onOkClick: (topic: string, message: string) => void // Menambahkan machineCode ke parameter
+  onNgClick: (topic: string, message: string) => void // Menambahkan machineCode ke parameter
+}
+
+export interface LiveMessage {
+  status: number | boolean;
+  akumulasi_counter: number;
+  rpm: number;
+  load_sensor1: number;
+  load_sensor2: number;
+  load_sensor3: number;
+  load_sensor4: number;
+  ts: number;
+}
+
+export interface LiveCardProps {
+  comId: string;
+  mcCd: string;
+  parsedMessage: LiveMessage | null;
+}
+
+export interface DowntimeCardProps {
+  comId: string;
+  mcCd: string;
+}
+
+
+export interface LiveDowntimesId {
+  downtimeStart: Date;
+  downtime: Date
+}
+

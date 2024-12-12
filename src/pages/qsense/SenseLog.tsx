@@ -1,5 +1,12 @@
-const SenseLog = () => {
-  return <div>SenseLog</div>
-}
+import DowntimesChartId from "@renderer/components/QSense/DonwtimesChartId";
 
-export default SenseLog
+const SenseLog = () => {
+  return (
+    <div>
+      SenseLog
+      <DowntimesChartId comId={"01"} mcCd={"BF-08401"} />
+    </div>
+  );
+};
+
+export default SenseLog;

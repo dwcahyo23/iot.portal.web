@@ -64,7 +64,7 @@ export const portalNavigationConfig: Record<string, PortalState> = {
   qsense: {
     navigation: [
       {
-        key: 'QSense',
+        key: 'QualityGuard',
         path: '/app/qsense/quality/guard',
         title: 'Quality Guard',
         translateKey: 'QSense',
@@ -72,8 +72,8 @@ export const portalNavigationConfig: Record<string, PortalState> = {
         authority: ['user', 'admin']
       },
       {
-        key: 'QSense',
-        path: '/app/qsense/quality/log/:comId/:mcCd',
+        key: 'SenseLog',
+        path: '/app/qsense/log',
         title: 'Sense Log',
         translateKey: 'QSense',
         type: 'title',

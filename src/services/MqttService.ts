@@ -3,7 +3,7 @@ import axios, { AxiosInstance, AxiosRequestConfig } from 'axios'
 
 const createMqttService = (): AxiosInstance => {
   const axiosInstance = axios.create({
-    // baseURL: 'http://localhost:5173',
+    baseURL: 'http://localhost:3040',
     headers: {
       Accept: '*/*',
       'Content-Type': 'application/json'
@@ -37,7 +37,7 @@ export const mqttGet = async <T>(url: string, config?: AxiosRequestConfig): Prom
 // Fungsi untuk POST request
 export const mqttPost = async <T>(
   url: string,
-  data?: any,
+  data?: unknown,
   config?: AxiosRequestConfig
 ): Promise<T> => {
   const axiosInstance = createMqttService()
@@ -55,7 +55,7 @@ export const mqttDelete = async <T>(url: string, config?: AxiosRequestConfig): P
 // Fungsi untuk PUT request
 export const mqttPut = async <T>(
   url: string,
-  data?: any,
+  data?: unknown,
   config?: AxiosRequestConfig
 ): Promise<T> => {
   const axiosInstance = createMqttService()

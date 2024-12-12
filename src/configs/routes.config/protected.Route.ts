@@ -45,6 +45,12 @@ const protectedRoute: Routes = [
 		authority: []
 	},
 	{
+		key: 'qsense-sense-log',
+		path: '/app/qsense/log',
+		component: lazy(() => import('@renderer/pages/qsense/SenseLog')),
+		authority: []
+	},
+	{
 		key: 'three-view-machine-info',
 		path: 'app/threeview/machine/info',
 		component: lazy(() => import('@renderer/pages/three-view/master/TableMachineInfo')),
