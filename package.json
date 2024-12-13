@@ -7,6 +7,7 @@
     "dev": "vite --mode development",
     "dev:server": "vite --mode server",
     "preview:server": "vite preview --host 0.0.0.0 --mode server",
+    "build:server": "tsc -b && vite build --mode server",
     "build": "tsc -b && vite build --mode production",
     "lint": "eslint .",
     "preview": "vite preview --host 0.0.0.0 --mode production"
