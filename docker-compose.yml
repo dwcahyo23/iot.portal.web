@@ -1,26 +1,32 @@
 version: "3.8"
+
 services:
   vite-app:
-    build: .
+    build:
+      context: . # Ganti dengan folder proyek Vite Anda
+      dockerfile: Dockerfile # Gunakan Dockerfile yang ada di proyek
     ports:
       - "3040:4173" # Map port 4173 (Vite preview) ke port 3040 di host
     environment:
-      VITE_API_URL: "http://nest-api-container:5001"
+      VITE_API_URL: "http://nest-api-container:5001/api/v1"
       VITE_EMQX_URL: "http://emqx:18803"
       VITE_WEBSOCKET_URL: "ws://emqx:8083/mqtt"
       VITE_THREEVIEW_URL: "http://192.168.192.34:8080"
+    depends_on:
+      - nest-api-container
+      - emqx
     networks:
       - vite-network
 
   nest-api-container:
-    image: nest-api:latest
+    image: nest-api:latest # Pastikan image ini sudah di-build
     ports:
       - "5001:5001"
     networks:
       - vite-network
 
   emqx:
-    image: emqx:5.8.1
+    image: emqx/emqx:5.8.1
     ports:
       - "8083:8083"
       - "8084:8084"
