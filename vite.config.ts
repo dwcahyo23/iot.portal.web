@@ -32,6 +32,7 @@ export default defineConfig(({ mode }) => {
     },
 
     server: {
+      host: true,
       port: parseInt(env.VITE_PORT, 10) || 3040,
       strictPort: true,
       proxy: {
