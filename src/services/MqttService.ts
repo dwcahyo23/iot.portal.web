@@ -3,7 +3,8 @@ import axios, { AxiosInstance, AxiosRequestConfig } from 'axios'
 
 const createMqttService = (): AxiosInstance => {
   const axiosInstance = axios.create({
-    baseURL: 'http://localhost:3040',
+    // baseURL: 'http://localhost:3040',
+    baseURL: import.meta.env.VITE_EMQX_URL,
     headers: {
       Accept: '*/*',
       'Content-Type': 'application/json'

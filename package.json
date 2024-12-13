@@ -4,10 +4,11 @@
   "version": "1.0.2",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "tsc -b && vite build",
+    "dev": "vite --mode development",
+    "dev:server": "vite --mode production",
+    "build": "tsc -b && vite build --mode production",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview --mode production"
   },
   "dependencies": {
     "@ag-grid-community/client-side-row-model": "^32.3.3",
