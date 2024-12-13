@@ -26,7 +26,7 @@ services:
       - vite-network
 
   emqx:
-    image: emqx/emqx:5.8.1
+    image: emqx:5.8.1
     ports:
       - "8083:8083"
       - "8084:8084"
