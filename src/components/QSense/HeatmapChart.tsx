@@ -23,11 +23,19 @@ const HeatmapChart: React.FC<HeatmapChartProps> = ({ mcCd, comId }) => {
   const downtimes = data?.data ?? [];
   const hours = Array.from({ length: 24 }, (_, i) => i);
   const today = dayjs().startOf("day");
+  const currentHour = dayjs().hour(); // Get the current hour
 
+  // Create downtime map with future hours as 'None' (grey)
   const downtimeMap = hours.map((hour) => {
     const start = today.add(hour, "hour");
     const stop = today.add(hour + 1, "hour");
 
+    // Mark future hours with "None" if they are after the current time
+    if (hour >= currentHour) {
+      return 0; // Grey (None)
+    }
+
+    // Mark downtime hours with either RUN or STOP
     const isDowntime =
       Array.isArray(downtimes) &&
       downtimes.some(
@@ -38,6 +46,7 @@ const HeatmapChart: React.FC<HeatmapChartProps> = ({ mcCd, comId }) => {
     return isDowntime ? 2 : 1;
   });
 
+  // Create series for the heatmap
   const heatmapSeries = [
     {
       name: "Machine Status",
@@ -45,6 +54,7 @@ const HeatmapChart: React.FC<HeatmapChartProps> = ({ mcCd, comId }) => {
     },
   ];
 
+  // Heatmap options including legend and color mapping
   const heatmapOptions = {
     chart: {
       type: "heatmap" as const,
@@ -54,8 +64,9 @@ const HeatmapChart: React.FC<HeatmapChartProps> = ({ mcCd, comId }) => {
       heatmap: {
         colorScale: {
           ranges: [
-            { from: 1, to: 1, color: "#00E396", name: "RUN" },
-            { from: 2, to: 2, color: "#FF4560", name: "STOP" },
+            { from: 0, to: 0, color: "#B0BEC5", name: "None" }, // Grey for future hours
+            { from: 1, to: 1, color: "#00E396", name: "RUN" }, // Green for running
+            { from: 2, to: 2, color: "#FF4560", name: "STOP" }, // Red for stopped
           ],
         },
       },
@@ -65,6 +76,10 @@ const HeatmapChart: React.FC<HeatmapChartProps> = ({ mcCd, comId }) => {
     },
     xaxis: {
       categories: hours.map((hour) => `${hour}:00 - ${hour + 1}:00`),
+    },
+    legend: {
+      show: true,
+      position: "top" as "top", // Legend at the top
     },
   };
 
@@ -99,7 +114,7 @@ const HeatmapChart: React.FC<HeatmapChartProps> = ({ mcCd, comId }) => {
       <Stack gap="lg">
         <Group justify="apart">
           <Title order={3} style={{ color: "#1a73e8" }}>
-            Stop Time
+            Run Time
           </Title>
         </Group>
 
