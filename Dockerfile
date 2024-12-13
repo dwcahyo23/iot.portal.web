@@ -47,7 +47,7 @@ COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/package*.json ./
 
 # Install hanya dependencies yang diperlukan untuk production
-RUN npm install --production
+RUN npm install
 
 # Expose port yang digunakan oleh Vite preview (default 4173)
 EXPOSE 4173
