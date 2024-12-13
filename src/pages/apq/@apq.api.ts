@@ -21,7 +21,8 @@ export const addTagTypes = [
   'APQ_USERS_PROGRES',
   'APQ_USERS_WORST_AND_BEST',
   'APQ_LEADERS_PROGRES',
-  'APQ_CHART_DATA'
+  'APQ_CHART_DATA',
+  'FIND_TEST'
 ]
 
 const ApqApi = api.enhanceEndpoints({ addTagTypes }).injectEndpoints({
@@ -226,6 +227,7 @@ const ApqApi = api.enhanceEndpoints({ addTagTypes }).injectEndpoints({
         }
       }
     })
+
   }),
   overrideExisting: false
 })

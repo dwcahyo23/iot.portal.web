@@ -39,17 +39,20 @@ export default defineConfig(({ mode }) => {
         '/api': {
           target: env.VITE_API_URL,
           changeOrigin: true,
-          rewrite: (path) => path.replace(/^\/api/, '')
+          rewrite: (path) => path.replace(/^\/api/, ''),
+          secure: false
         },
         '/mqtt': {
           target: env.VITE_EMQX_URL,
           changeOrigin: true,
-          rewrite: (path) => path.replace(/^\/mqtt/, '')
+          rewrite: (path) => path.replace(/^\/mqtt/, ''),
+          secure: false
         },
         '/threeview': {
           target: env.VITE_THREEVIEW_URL,
           changeOrigin: true,
-          rewrite: (path) => path.replace(/^\/threeview/, '')
+          rewrite: (path) => path.replace(/^\/threeview/, ''),
+          secure: false
         },
         '/socket': {
           target: env.VITE_WEBSOCKET_URL,

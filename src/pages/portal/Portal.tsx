@@ -1,37 +1,37 @@
 // src/pages/Portal.tsx
 
-import { Card, Flex, Grid, Text, useMantineTheme } from '@mantine/core'
-import { portalNavigationConfig } from '@renderer/configs/portal.config/portal.config'
-import { updateNavigationPortal } from '@renderer/store'
-import { IconChartLine, IconEye, IconTools } from '@tabler/icons-react'
-import { useDispatch } from 'react-redux'
-import { Link } from 'react-router-dom'
-import classes from './Portal.module.css'
+import { Card, Flex, Grid, Text, useMantineTheme } from "@mantine/core";
+import { portalNavigationConfig } from "@renderer/configs/portal.config/portal.config";
+import { updateNavigationPortal } from "@renderer/store";
+import { IconChartLine, IconEye, IconTools } from "@tabler/icons-react";
+import { useDispatch } from "react-redux";
+import { Link } from "react-router-dom";
+import classes from "./Portal.module.css";
 
 // RGBA Conversion Function
 const hexToRgba = (hex: string, alpha: number) => {
-  hex = hex.replace(/^#/, '')
-  let r: number, g: number, b: number
+  hex = hex.replace(/^#/, "");
+  let r: number, g: number, b: number;
 
   if (hex.length === 3) {
-    r = parseInt(hex[0] + hex[0], 16)
-    g = parseInt(hex[1] + hex[1], 16)
-    b = parseInt(hex[2] + hex[2], 16)
+    r = parseInt(hex[0] + hex[0], 16);
+    g = parseInt(hex[1] + hex[1], 16);
+    b = parseInt(hex[2] + hex[2], 16);
   } else {
-    r = parseInt(hex.substring(0, 2), 16)
-    g = parseInt(hex.substring(2, 4), 16)
-    b = parseInt(hex.substring(4, 6), 16)
+    r = parseInt(hex.substring(0, 2), 16);
+    g = parseInt(hex.substring(2, 4), 16);
+    b = parseInt(hex.substring(4, 6), 16);
   }
 
-  return `rgba(${r}, ${g}, ${b}, ${alpha})`
-}
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+};
 
 interface PortalCardProps {
-  title: string
-  description: string
-  to: string
-  icon: React.ReactNode
-  backgroundColor: string
+  title: string;
+  description: string;
+  to: string;
+  icon: React.ReactNode;
+  backgroundColor: string;
 }
 
 const PortalCard: React.FC<PortalCardProps> = ({
@@ -39,18 +39,18 @@ const PortalCard: React.FC<PortalCardProps> = ({
   description,
   to,
   icon,
-  backgroundColor
+  backgroundColor,
 }) => {
-  const dispatch = useDispatch()
-  const configKey = title.replace(/\s+/g, '').toLowerCase()
-  const navigationConfig = portalNavigationConfig[configKey]
+  const dispatch = useDispatch();
+  const configKey = title.replace(/\s+/g, "").toLowerCase();
+  const navigationConfig = portalNavigationConfig[configKey];
 
   const handleClick = () => {
     if (navigationConfig) {
       // console.log(navigationConfig)
-      dispatch(updateNavigationPortal(navigationConfig.navigation))
+      dispatch(updateNavigationPortal(navigationConfig.navigation));
     }
-  }
+  };
 
   return (
     <Card
@@ -63,7 +63,12 @@ const PortalCard: React.FC<PortalCardProps> = ({
       style={{ backgroundColor }}
       aria-label={`Akses aplikasi ${title}`}
     >
-      <Flex direction="column" align="center" justify="center" style={{ height: '100%' }}>
+      <Flex
+        direction="column"
+        align="center"
+        justify="center"
+        style={{ height: "100%" }}
+      >
         <div className={classes.cardIcon}>{icon}</div>
         <Text size="lg" fw={500}>
           {title}
@@ -73,20 +78,25 @@ const PortalCard: React.FC<PortalCardProps> = ({
         </Text>
       </Flex>
     </Card>
-  )
-}
+  );
+};
 
 const Portal = () => {
-  const theme = useMantineTheme()
+  const theme = useMantineTheme();
 
   return (
     <div className={classes.container}>
-      <Flex direction="column" justify="center" align="center" className={classes.content}>
+      <Flex
+        direction="column"
+        justify="center"
+        align="center"
+        className={classes.content}
+      >
         <Grid
           justify="center"
           align="flex-start"
           gutter="md"
-          style={{ width: '100%', maxWidth: '1200px' }}
+          style={{ width: "100%", maxWidth: "1200px" }}
         >
           <Grid.Col span={{ xs: 12, sm: 6, md: 4 }}>
             <PortalCard
@@ -123,7 +133,7 @@ const Portal = () => {
             <PortalCard
               title="QSense"
               description="Akses aplikasi Q-Sense Forming"
-              to="/app/qsense/quality/guard"
+              to="/app/qsense/log"
               icon={<IconTools />}
               backgroundColor={hexToRgba(theme.colors.orange[6], 0.8)} // Use the conversion function
             />
@@ -151,7 +161,7 @@ const Portal = () => {
         </Grid>
       </Flex>
     </div>
-  )
-}
+  );
+};
 
-export default Portal
+export default Portal;

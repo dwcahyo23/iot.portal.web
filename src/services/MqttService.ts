@@ -3,11 +3,15 @@ import axios, { AxiosInstance, AxiosRequestConfig } from 'axios'
 
 const createMqttService = (): AxiosInstance => {
   const axiosInstance = axios.create({
-    // baseURL: 'http://localhost:3040',
-    baseURL: import.meta.env.VITE_EMQX_URL,
+    timeout: 60000,
+    // baseURL: 'http://localhost:3060',
+    // baseURL: import.meta.env.VITE_EMQX_URL,
     headers: {
       Accept: '*/*',
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      'Cache-Control': 'no-cache',  // Nonaktifkan cache
+      'Pragma': 'no-cache',         // Pastikan browser tidak menggunakan cache
+      'Expires': '0'                // Mengatakan browser untuk tidak menyimpan cache
     },
     auth: {
       username: MqttConfig.username,

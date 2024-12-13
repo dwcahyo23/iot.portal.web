@@ -5,7 +5,7 @@ export type MqttConfig = {
 }
 
 const MqttConfig: MqttConfig = {
-  apiPrefix: import.meta.env.VITE_EMQX_API_URL,
+  apiPrefix: import.meta.env.VITE_EMQX_URL,
   username: import.meta.env.VITE_EMQX_API_KEY,
   password: import.meta.env.VITE_EMQX_API_SECRET
 }

@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite --mode development",
-    "dev:server": "vite --mode production",
+    "dev:server": "vite --mode server",
     "build": "tsc -b && vite build --mode production",
     "lint": "eslint .",
     "preview": "vite preview --host 0.0.0.0 --mode production"
@@ -40,6 +40,7 @@
     "@tiptap/react": "^2.9.1",
     "@tiptap/starter-kit": "^2.9.1",
     "@types/react-virtualized": "^9.21.30",
+    "apexcharts": "^4.2.0",
     "axios": "^1.7.7",
     "dayjs": "^1.11.13",
     "embla-carousel-react": "^7.1.0",
@@ -51,6 +52,7 @@
     "miragejs": "^0.2.0-alpha.3",
     "mqtt": "^5.10.2",
     "react-7-segment-display": "^1.1.2",
+    "react-apexcharts": "^1.7.0",
     "react-gauge-component": "^1.2.62",
     "react-i18next": "^15.1.0",
     "react-redux": "^9.1.2",

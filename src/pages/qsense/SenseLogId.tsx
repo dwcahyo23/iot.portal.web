@@ -1,27 +1,34 @@
+import { Container, Paper, Stack } from "@mantine/core";
+import HeatmapChart from "@renderer/components/QSense/HeatmapChart";
 import LiveCard from "@renderer/components/QSense/LiveCard";
-import useMqtt from "@renderer/utils/hooks/useMqtt";
 import { useParams } from "react-router-dom";
 
 const SenseLogId = () => {
   const { comId, mcCd } = useParams<{ comId: string; mcCd: string }>();
 
+  // Validasi parameter awal
   if (!comId || !mcCd) {
     return <div>Error: Parameter `comId` atau `mcCd` tidak ditemukan.</div>;
   }
 
-  const topicKey = `qSense/Pub/${comId}/${mcCd}`;
-  const topics = [topicKey];
-  const { messages } = useMqtt(topics);
-
-  // Extract and parse the payload
-  const topicData = messages[topicKey];
-  const parsedMessage = topicData ? JSON.parse(topicData.payload) : null;
-
   return (
-    <div>
-      <LiveCard comId={comId} mcCd={mcCd} parsedMessage={parsedMessage} />
-      {/* <DowntimesChartId comId={comId} mcCd={mcCd} /> */}
-    </div>
+    <Container size="lg" py="lg">
+      <Paper
+        shadow="xs"
+        p="md"
+        radius="md"
+        style={{ backgroundColor: "#f4f4f9" }}
+      >
+        <Stack gap="xl">
+          {" "}
+          {/* Display LiveCard and HeatmapChart */}
+          <Stack gap="lg">
+            <LiveCard comId={comId} mcCd={mcCd?.toUpperCase()} />
+            <HeatmapChart mcCd={mcCd?.toUpperCase()} comId={comId} />
+          </Stack>
+        </Stack>
+      </Paper>
+    </Container>
   );
 };
 

@@ -44,7 +44,7 @@ export interface LiveMessage {
 export interface LiveCardProps {
   comId: string;
   mcCd: string;
-  parsedMessage: LiveMessage | null;
+  // parsedMessage: LiveMessage | null;
 }
 
 export interface DowntimeCardProps {
@@ -52,9 +52,12 @@ export interface DowntimeCardProps {
   mcCd: string;
 }
 
-
 export interface LiveDowntimesId {
-  downtimeStart: Date;
-  downtime: Date
+  id: number
+  downtimeStart: Date | string;
+  downtimeFinish: Date | string
 }
+
+
+
 

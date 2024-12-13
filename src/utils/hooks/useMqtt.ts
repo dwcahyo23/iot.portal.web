@@ -15,9 +15,9 @@ const useMqtt = (topics: string[], brokerUrl: string = 'ws://192.168.192.7:8083/
 
 		const options: mqtt.IClientOptions = {
 			clientId,
-			keepalive: 0, // Keep the connection alive
+			keepalive: 60, // Keep the connection alive
 			clean: true,
-			reconnectPeriod: 10000, // Reconnect if the connection is lost
+			reconnectPeriod: 5000, // Reconnect if the connection is lost
 			connectTimeout: 30 * 1000, // Connection timeout
 		};
 
@@ -30,7 +30,7 @@ const useMqtt = (topics: string[], brokerUrl: string = 'ws://192.168.192.7:8083/
 			topics.forEach((topic) => {
 				client.subscribe(topic, (err) => {
 					if (err) {
-						console.error(`Failed to subscribe to ${topic}`, err);
+						console.error(`Failed to subscribe to ${topic} try reconnect`);
 					}
 				});
 			});

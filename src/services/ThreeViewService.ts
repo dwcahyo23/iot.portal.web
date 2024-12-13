@@ -2,8 +2,8 @@ import axios from 'axios'
 
 const ThreeViewService = axios.create({
   timeout: 60000,
-  // baseURL: 'http://localhost:3040',
-  baseURL: import.meta.env.VITE_THREEVIEW_URL,
+  // baseURL: 'http://localhost:3060',
+  // baseURL: import.meta.env.VITE_THREEVIEW_URL,
   headers: {
     language: 'EN'
   }

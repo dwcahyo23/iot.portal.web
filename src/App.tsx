@@ -17,6 +17,10 @@ export default function App() {
     mockServer();
   }
 
+  console.log(import.meta.env.VITE_API_URL);
+  console.log(import.meta.env.VITE_EMQX_URL);
+  console.log(import.meta.env.VITE_THREEVIEW_URL);
+
   return (
     <MantineProvider>
       <Notifications />
