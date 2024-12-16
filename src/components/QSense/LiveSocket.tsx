@@ -117,7 +117,8 @@ const LiveSocket = ({ comId, mcCd }: LiveCardProps) => {
         },
         x: {
           show: true, // Display X value (time in this case)
-          formatter: (value: number) => dayjs(value).format("HH:mm:ss"),
+          formatter: (value: number) =>
+            dayjs(value).add(7, "hour").format("HH:mm:ss"),
         },
         y: {
           formatter: (value: number) => `${value.toFixed(2)}`, // Format Y value
