@@ -87,7 +87,7 @@ const LiveSocket = ({ comId, mcCd }: LiveCardProps) => {
       xaxis: {
         type: "datetime",
         labels: {
-          formatter: (value) => dayjs(value).format("HH:mm:ss"),
+          formatter: (value) => dayjs(value).add(7, "hour").format("HH:mm:ss"),
           style: {
             colors: "#ffffff",
           },
@@ -239,7 +239,7 @@ const LiveSocket = ({ comId, mcCd }: LiveCardProps) => {
                 ],
               }}
               pointer={{
-                type: "arrow",
+                type: "needle",
                 elastic: true,
                 color: "#3f51b5",
               }}
