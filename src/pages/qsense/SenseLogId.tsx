@@ -1,6 +1,5 @@
 import { Container, Paper, Stack } from "@mantine/core";
-import HeatmapChart from "@renderer/components/QSense/HeatmapChart";
-import LiveCard from "@renderer/components/QSense/LiveCard";
+import LiveSocket from "@renderer/components/QSense/LiveSocket";
 import { useParams } from "react-router-dom";
 
 const SenseLogId = () => {
@@ -23,8 +22,9 @@ const SenseLogId = () => {
           {" "}
           {/* Display LiveCard and HeatmapChart */}
           <Stack gap="lg">
-            <LiveCard comId={comId} mcCd={mcCd?.toUpperCase()} />
-            <HeatmapChart mcCd={mcCd?.toUpperCase()} comId={comId} />
+            {/* <LiveCard comId={comId} mcCd={mcCd?.toUpperCase()} /> */}
+            <LiveSocket comId={comId} mcCd={mcCd?.toUpperCase()} />
+            {/* <HeatmapChart mcCd={mcCd?.toUpperCase()} comId={comId} /> */}
           </Stack>
         </Stack>
       </Paper>
