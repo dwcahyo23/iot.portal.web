@@ -1,4 +1,4 @@
-import { Badge, Card, Container, Grid, Text } from "@mantine/core";
+import { Badge, Card, Container, Grid, Group, Text } from "@mantine/core";
 import { LiveCardProps } from "@renderer/pages/qsense/mqtt.types";
 import useMqtt from "@renderer/utils/hooks/useMqtt";
 import { IconPlayerPlay, IconPlayerStop } from "@tabler/icons-react";
@@ -41,6 +41,15 @@ const LiveSocket = ({ comId, mcCd }: LiveCardProps) => {
     load_sensor4: [],
   });
 
+  const [previousSensorData, setPreviousSensorData] = useState<
+    Record<string, { ts: string; value: number }[]>
+  >({
+    load_sensor1: [],
+    load_sensor2: [],
+    load_sensor3: [],
+    load_sensor4: [],
+  });
+
   const [counter, setCounter] = useState<number | null>(
     parsedMessage?.akumulasi_counter ?? 0
   );
@@ -51,18 +60,17 @@ const LiveSocket = ({ comId, mcCd }: LiveCardProps) => {
     if (parsedMessage) {
       setSensorData((prev) => {
         const updated = { ...prev };
+        setPreviousSensorData({ ...prev }); // Simpan data sebelumnya sebelum update
+
         Object.entries(prev).forEach(([sensor, values]) => {
           const newValue = parsedMessage[sensor as keyof SenseLogData];
           if (newValue !== undefined) {
-            // Generate a smooth sinusoidal wave
             const waveData = generateSinusoidalWave(
-              newValue as number, // Peak value
-              100, // Total points for smoothness
-              2000, // Duration of the wave (2 seconds)
-              parsedMessage.ts // Start timestamp
+              newValue as number,
+              100,
+              2000,
+              parsedMessage.ts
             );
-
-            // Replace with only the new wave
             updated[sensor] = waveData;
           }
         });
@@ -80,6 +88,25 @@ const LiveSocket = ({ comId, mcCd }: LiveCardProps) => {
 
   const renderSensorChart = (sensor: string, label: string) => {
     const data = sensorData[sensor] || [];
+    const previousData = previousSensorData[sensor] || [];
+
+    // Menyusun data dengan menggunakan indeks array sebagai x-axis untuk overlap
+    const combinedData = [
+      ...data.map((point, index) => ({
+        x: index, // Menggunakan indeks array sebagai x-axis
+        y: point.value,
+        isCurrent: true,
+      })),
+      ...previousData.map((point, index) => ({
+        x: index, // Menggunakan indeks array sebagai x-axis
+        y: point.value,
+        isCurrent: false,
+      })),
+    ];
+
+    // Urutkan data berdasarkan indeks x (array index)
+    combinedData.sort((a, b) => a.x - b.x);
+
     const chartOptions: ApexOptions = {
       chart: {
         type: "line",
@@ -91,28 +118,37 @@ const LiveSocket = ({ comId, mcCd }: LiveCardProps) => {
         zoom: { enabled: false },
       },
       xaxis: {
-        type: "datetime",
+        type: "numeric", // Gunakan tipe numerik untuk sumbu x
         labels: {
-          formatter: (value) => dayjs(value).add(7, "hour").format("HH:mm:ss"),
+          formatter: (value) => `${value}`, // Menampilkan indeks sebagai label
           style: {
             colors: "#ffffff",
           },
         },
       },
       yaxis: {
-        max: Math.max(...data.map((d) => d.value)) + 10,
-        min: Math.min(...data.map((d) => d.value)) - 10,
+        max:
+          Math.max(
+            ...data.map((d) => d.value),
+            ...previousData.map((d) => d.value)
+          ) + 10,
+        min:
+          Math.min(
+            ...data.map((d) => d.value),
+            ...previousData.map((d) => d.value)
+          ) - 10,
         tickAmount: 5,
         labels: {
           style: { colors: ["#ffffff"] },
-          formatter: (value) => value.toFixed(2), // Format with two decimal places
+          formatter: (value) => value.toFixed(2),
         },
       },
       stroke: {
         curve: "smooth",
-        width: 2,
+        width: [3, 1],
+        dashArray: [0, 5],
       },
-      colors: ["#00E396"],
+      colors: ["#00E396", "#FF4560"],
       grid: { show: true },
       tooltip: {
         enabled: true,
@@ -126,22 +162,35 @@ const LiveSocket = ({ comId, mcCd }: LiveCardProps) => {
         },
         x: {
           show: true,
-          formatter: (value: number) =>
-            dayjs(value).add(7, "hour").format("HH:mm:ss"),
+          formatter: (value: number) => `Index: ${value}`,
         },
         y: {
           formatter: (value: number) => `${value.toFixed(2)}`,
+        },
+      },
+      legend: {
+        position: "top", // Tempatkan legend di atas
+        labels: {
+          colors: "#ffffff", // Warna legend menjadi putih
         },
       },
     };
 
     const chartSeries = [
       {
-        name: label,
-        data: data.map(({ ts, value }) => ({
-          x: new Date(ts).getTime(),
-          y: value,
-        })),
+        name: `${label} - Current Wave`,
+        data: combinedData
+          .filter((d) => d.isCurrent)
+          .map(({ x, y }) => ({ x, y })),
+      },
+      {
+        name: `${label} - Previous Wave`,
+        data: combinedData
+          .filter((d) => !d.isCurrent)
+          .map(({ x, y }) => ({ x, y })),
+        stroke: {
+          dashArray: 4, // Garis bergaris
+        },
       },
     ];
 
@@ -269,15 +318,29 @@ const LiveSocket = ({ comId, mcCd }: LiveCardProps) => {
         {Object.entries(sensorData).map(([sensor, values], index) => (
           <Grid.Col span={{ xs: 12, sm: 6, md: 6, lg: 6 }} key={sensor}>
             <Card className="panel-card sensor-panel">
-              <Text size="lg" fw={700}>
-                Sensor {index + 1}
-              </Text>
-              <Text size="md" fw={500}>
-                Peak:
-                {values.length
-                  ? Math.max(...values.map((d) => d.value)).toFixed(2) // Ambil nilai maksimum (peak)
-                  : "-"}
-              </Text>
+              <Group justify="flex-start">
+                <Text size="lg" fw={700}>
+                  Sensor {index + 1}
+                </Text>
+              </Group>
+
+              <Group justify="flex-end">
+                <Text size="md" fw={400}>
+                  Current Peak:{" "}
+                  {values.length
+                    ? Math.max(...values.map((d) => d.value)).toFixed(2) // Ambil nilai maksimum (peak)
+                    : "-"}
+                </Text>
+                <Text size="md" fw={400}>
+                  Previous Peak:{" "}
+                  {previousSensorData?.[sensor]?.length
+                    ? Math.max(
+                        ...previousSensorData[sensor].map((d) => d.value)
+                      ).toFixed(2)
+                    : "-"}
+                </Text>
+              </Group>
+
               {renderSensorChart(sensor, `Sensor ${index + 1}`)}
             </Card>
           </Grid.Col>
