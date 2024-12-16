@@ -189,7 +189,7 @@ const LiveSocket = ({ comId, mcCd }: LiveCardProps) => {
         <Grid.Col span={12}>{renderPanelHeader()}</Grid.Col>
 
         {/* Counter with CountUp */}
-        <Grid.Col span={6}>
+        <Grid.Col span={{ xs: 12, sm: 6, md: 6, lg: 6 }}>
           <Card className="panel-card akumulasi_counter-panel">
             <Text size="xl" fw={700}>
               Counter
@@ -199,7 +199,7 @@ const LiveSocket = ({ comId, mcCd }: LiveCardProps) => {
         </Grid.Col>
 
         {/* RPM Gauge */}
-        <Grid.Col span={6}>
+        <Grid.Col span={{ xs: 12, sm: 6, md: 6, lg: 6 }}>
           <Card className="panel-card rpm-panel">
             <Text size="xl" fw={700}>
               RPM
@@ -258,7 +258,7 @@ const LiveSocket = ({ comId, mcCd }: LiveCardProps) => {
         {/* Load Sensor Panels */}
         {["load_sensor1", "load_sensor2", "load_sensor3", "load_sensor4"].map(
           (sensor, index) => (
-            <Grid.Col span={6} key={sensor}>
+            <Grid.Col span={{ xs: 12, sm: 6, md: 6, lg: 6 }} key={sensor}>
               <Card className="panel-card sensor-panel">
                 <Text size="lg" fw={700}>
                   Sensor {index + 1}
