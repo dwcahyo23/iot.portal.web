@@ -342,6 +342,15 @@ const LiveSocket = ({ comId, mcCd }: LiveCardProps) => {
               </Group>
 
               {renderSensorChart(sensor, `Sensor ${index + 1}`)}
+
+              <Group justify="flex-end">
+                <Text size="md" fw={200}>
+                  Timestamp:{" "}
+                  {dayjs(parsedMessage?.ts)
+                    .add(7, "hour")
+                    .format("DD MMM YYYY, HH:mm:ss")}
+                </Text>
+              </Group>
             </Card>
           </Grid.Col>
         ))}
