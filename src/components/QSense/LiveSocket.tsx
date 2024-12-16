@@ -54,10 +54,16 @@ const LiveSocket = ({ comId, mcCd }: LiveCardProps) => {
         Object.entries(prev).forEach(([sensor, values]) => {
           const newValue = parsedMessage[sensor as keyof SenseLogData];
           if (newValue !== undefined) {
-            updated[sensor] = [
-              ...values,
-              { ts: parsedMessage.ts, value: newValue as number },
-            ].slice(-MAX_DATA_POINTS);
+            // Generate a smooth sinusoidal wave
+            const waveData = generateSinusoidalWave(
+              newValue as number, // Peak value
+              100, // Total points for smoothness
+              2000, // Duration of the wave (2 seconds)
+              parsedMessage.ts // Start timestamp
+            );
+
+            // Replace with only the new wave
+            updated[sensor] = waveData;
           }
         });
         return updated;
@@ -94,10 +100,13 @@ const LiveSocket = ({ comId, mcCd }: LiveCardProps) => {
         },
       },
       yaxis: {
-        max: 100,
-        min: 0,
+        max: Math.max(...data.map((d) => d.value)) + 10,
+        min: Math.min(...data.map((d) => d.value)) - 10,
         tickAmount: 5,
-        labels: { style: { colors: ["#ffffff"] } },
+        labels: {
+          style: { colors: ["#ffffff"] },
+          formatter: (value) => value.toFixed(2), // Format with two decimal places
+        },
       },
       stroke: {
         curve: "smooth",
@@ -107,21 +116,21 @@ const LiveSocket = ({ comId, mcCd }: LiveCardProps) => {
       grid: { show: true },
       tooltip: {
         enabled: true,
-        theme: "dark", // Ensure tooltip text is readable against the background
+        theme: "dark",
         style: {
-          fontSize: "12px", // Adjust tooltip text size
+          fontSize: "12px",
           fontFamily: "'Arial', sans-serif",
         },
         onDatasetHover: {
           highlightDataSeries: true,
         },
         x: {
-          show: true, // Display X value (time in this case)
+          show: true,
           formatter: (value: number) =>
             dayjs(value).add(7, "hour").format("HH:mm:ss"),
         },
         y: {
-          formatter: (value: number) => `${value.toFixed(2)}`, // Format Y value
+          formatter: (value: number) => `${value.toFixed(2)}`,
         },
       },
     };
@@ -257,18 +266,22 @@ const LiveSocket = ({ comId, mcCd }: LiveCardProps) => {
         </Grid.Col>
 
         {/* Load Sensor Panels */}
-        {["load_sensor1", "load_sensor2", "load_sensor3", "load_sensor4"].map(
-          (sensor, index) => (
-            <Grid.Col span={{ xs: 12, sm: 6, md: 6, lg: 6 }} key={sensor}>
-              <Card className="panel-card sensor-panel">
-                <Text size="lg" fw={700}>
-                  Sensor {index + 1}
-                </Text>
-                {renderSensorChart(sensor, `Sensor ${index + 1}`)}
-              </Card>
-            </Grid.Col>
-          )
-        )}
+        {Object.entries(sensorData).map(([sensor, values], index) => (
+          <Grid.Col span={{ xs: 12, sm: 6, md: 6, lg: 6 }} key={sensor}>
+            <Card className="panel-card sensor-panel">
+              <Text size="lg" fw={700}>
+                Sensor {index + 1}
+              </Text>
+              <Text size="md" fw={500}>
+                Peak:
+                {values.length
+                  ? Math.max(...values.map((d) => d.value)).toFixed(2) // Ambil nilai maksimum (peak)
+                  : "-"}
+              </Text>
+              {renderSensorChart(sensor, `Sensor ${index + 1}`)}
+            </Card>
+          </Grid.Col>
+        ))}
       </Grid>
     </Container>
   );
@@ -281,6 +294,30 @@ function safeParseJSON(payload: string) {
     console.warn("Failed to parse JSON payload:", payload);
     return null;
   }
+}
+
+function generateSinusoidalWave(
+  peak: number,
+  totalPoints: number,
+  durationMs: number,
+  startTs: string
+): { ts: string; value: number }[] {
+  const data: { ts: string; value: number }[] = [];
+  const frequency = Math.PI; // Setengah gelombang sinus (dari 0 ke π)
+
+  for (let i = 0; i < totalPoints; i++) {
+    const progress = i / (totalPoints - 1); // Progress dari 0 ke 1
+    const value = peak * Math.sin(progress * frequency); // Gelombang sinus naik-turun
+
+    // Hitung timestamp untuk setiap titik
+    const ts = dayjs(startTs)
+      .add((i * durationMs) / totalPoints, "millisecond")
+      .toISOString();
+
+    data.push({ ts, value });
+  }
+
+  return data;
 }
 
 export default LiveSocket;

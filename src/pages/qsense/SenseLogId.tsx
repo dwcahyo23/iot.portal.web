@@ -19,10 +19,7 @@ const SenseLogId = () => {
         style={{ backgroundColor: "#f4f4f9" }}
       >
         <Stack gap="xl">
-          {" "}
-          {/* Display LiveCard and HeatmapChart */}
           <Stack gap="lg">
-            {/* <LiveCard comId={comId} mcCd={mcCd?.toUpperCase()} /> */}
             <LiveSocket comId={comId} mcCd={mcCd?.toUpperCase()} />
             {/* <HeatmapChart mcCd={mcCd?.toUpperCase()} comId={comId} /> */}
           </Stack>
