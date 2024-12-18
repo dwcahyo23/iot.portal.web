@@ -28,11 +28,15 @@ const convertExcelApqToCreatePdApq = (
     const parseNumber = (value: unknown): number =>
       value == null || value === " " ? 0 : Number(value);
 
-    console.log(excelApq.avaibility, parseNumber(excelApq.avaibility));
+    // console.log(
+    //   parseNumber(excelApq.A),
+    //   parseNumber(excelApq.P),
+    //   parseNumber(excelApq.Q)
+    // );
 
-    const avaibility = parseNumber(excelApq.avaibility);
-    const performance = parseNumber(excelApq.performance);
-    const quality = parseNumber(excelApq.quality);
+    const avaibility = parseNumber(excelApq.A);
+    const performance = parseNumber(excelApq.P);
+    const quality = parseNumber(excelApq.Q);
 
     return {
       nik: nikOperator.toString(),

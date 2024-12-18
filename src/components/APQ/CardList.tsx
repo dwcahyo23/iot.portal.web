@@ -1,38 +1,59 @@
-import { Badge, Card, Flex, Paper, Progress, Text, useMantineColorScheme } from '@mantine/core'
-import { IconArrowDown, IconArrowUp, IconMinus } from '@tabler/icons-react'
-import React from 'react'
-import classes from './CardList.module.css'
+import {
+  Badge,
+  Card,
+  Flex,
+  Paper,
+  Progress,
+  Text,
+  useMantineColorScheme,
+} from "@mantine/core";
+import { IconArrowDown, IconArrowUp, IconMinus } from "@tabler/icons-react";
+import React from "react";
+import "swiper/css";
+import { Autoplay } from "swiper/modules";
+import { Swiper, SwiperSlide } from "swiper/react";
 
 interface CardItem {
-  firstname: string
-  lastname: string
-  oee: number
-  trend: string
-  change_percent: number
-  section: string
-  category?: string // Optional
-  last_date?: Date // Optional
+  firstname: string;
+  lastname: string;
+  oee: number;
+  trend: string;
+  change_percent: number;
+  section: string;
+  category?: string; // Optional
+  last_date?: Date; // Optional
 }
 
 interface CardListProps {
-  data: CardItem[] // Receive data as a prop
-  title: string
+  data: CardItem[]; // Receive data as a prop
+  title: string;
 }
 
 const trendStyles = {
-  up: { color: 'green', icon: <IconArrowUp size={16} /> },
-  down: { color: 'red', icon: <IconArrowDown size={16} /> },
-  no_change: { color: 'gray', icon: <IconMinus size={16} /> }
-}
+  up: { color: "green", icon: <IconArrowUp size={16} /> },
+  down: { color: "red", icon: <IconArrowDown size={16} /> },
+  no_change: { color: "gray", icon: <IconMinus size={16} /> },
+};
 
-const CardComponent: React.FC<{ item: CardItem; index: number }> = ({ item, index }) => {
-  const formattedDate = item.last_date ? new Date(item.last_date).toISOString().split('T')[0] : null
+const CardComponent: React.FC<{ item: CardItem; index: number }> = ({
+  item,
+  index,
+}) => {
+  const formattedDate = item.last_date
+    ? new Date(item.last_date).toISOString().split("T")[0]
+    : null;
 
   return (
-    <div className={classes.cardComponent}>
+    <div>
       <Card shadow="sm" padding="md">
-        <Flex justify="space-between" align="center" style={{ marginBottom: '8px' }}>
-          <Text fw={500}>{`${index + 1}. ${item.firstname} ${item.lastname}`}</Text>
+        <Flex
+          justify="space-between"
+          align="center"
+          style={{ marginBottom: "8px" }}
+        >
+          <Text
+            fw={500}
+          >{`${index + 1}. ${item.firstname} ${item.lastname}`}</Text>
 
           <div>
             <Badge variant="outline" color="blue">
@@ -40,7 +61,10 @@ const CardComponent: React.FC<{ item: CardItem; index: number }> = ({ item, inde
             </Badge>
             {/* Display category as a badge */}
             {item.category && (
-              <Badge color={item.category === 'Worst' ? 'red' : 'green'} variant="filled">
+              <Badge
+                color={item.category === "Worst" ? "red" : "green"}
+                variant="filled"
+              >
                 {item.category.toUpperCase()}
               </Badge>
             )}
@@ -64,20 +88,11 @@ const CardComponent: React.FC<{ item: CardItem; index: number }> = ({ item, inde
         )}
       </Card>
     </div>
-  )
-}
+  );
+};
 
 const CardList: React.FC<CardListProps> = ({ data, title }) => {
-  const { colorScheme } = useMantineColorScheme()
-  const cardHeight = 120 // Height of each card
-  const containerHeight = 600 // Height of the container
-
-  // Calculate total height based on the number of items in the original data
-  const totalHeight = data.length * cardHeight
-
-  // Determine if the animation should be applied and whether to duplicate data
-  const shouldAnimate = totalHeight > containerHeight
-  const displayedData = shouldAnimate ? [...data] : data // Duplicate data only if needed
+  const { colorScheme } = useMantineColorScheme();
 
   return (
     <Paper
@@ -85,42 +100,46 @@ const CardList: React.FC<CardListProps> = ({ data, title }) => {
       radius="lg"
       p="md"
       style={{
-        width: '100%',
-        height: '600px',
-        border: '1px solid #e0e0e0',
-        backgroundColor: colorScheme === 'dark' ? '#1A1B1E' : '#f9f9f9',
-        display: 'flex',
-        flexDirection: 'column'
+        width: "100%",
+        height: "600px",
+        border: "1px solid #e0e0e0",
+        backgroundColor: colorScheme === "dark" ? "#1A1B1E" : "#f9f9f9",
+        display: "flex",
+        flexDirection: "column",
       }}
     >
       <Flex justify="center" mb="md" align="center" direction="row">
         <Text
           c="dark"
           size="sm"
-          style={{ fontWeight: 700, textTransform: 'uppercase', fontSize: '1.2rem' }}
+          style={{
+            fontWeight: 700,
+            textTransform: "uppercase",
+            fontSize: "1.2rem",
+          }}
         >
           {title} {/* Dynamic title */}
         </Text>
       </Flex>
-
-      <div
-        className={classes.cardListContainer}
-        style={{ height: containerHeight - 60, overflow: 'hidden' }}
+      <Swiper
+        direction="vertical" // Scroll vertikal
+        loop={true} // Loop tanpa batas
+        speed={2000} // Kecepatan scroll
+        autoplay={{
+          delay: 2500,
+          disableOnInteraction: false,
+        }}
+        slidesPerView={4} // Jumlah card yang ditampilkan dalam satu waktu
+        modules={[Autoplay]}
       >
-        <div
-          className={classes.cardList}
-          style={{
-            animation: shouldAnimate ? `moveDown ${totalHeight / 20}s linear infinite` : 'none', // Adjust duration based on total height
-            marginBottom: '-60px'
-          }}
-        >
-          {displayedData.map((item, index) => (
-            <CardComponent key={index} item={item} index={index} />
-          ))}
-        </div>
-      </div>
+        {data.map((item, index) => (
+          <SwiperSlide key={index}>
+            <CardComponent item={item} index={index} />
+          </SwiperSlide>
+        ))}
+      </Swiper>
     </Paper>
-  )
-}
+  );
+};
 
-export default CardList
+export default CardList;

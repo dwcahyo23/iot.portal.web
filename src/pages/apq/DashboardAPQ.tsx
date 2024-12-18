@@ -1,7 +1,7 @@
 import { Grid, Group, Select } from "@mantine/core";
 import CardList from "@renderer/components/APQ/CardList";
+import CardUserList from "@renderer/components/APQ/CardUserList";
 import Chart from "@renderer/components/APQ/Chart";
-import UserCarouselVirtualized from "@renderer/components/APQ/UserCarouselVritualized";
 import LoadingScreen from "@renderer/components/LoadingScreen/LoadingScreen";
 import { useEffect, useState } from "react";
 import {
@@ -154,7 +154,7 @@ const DashboardAPQ = () => {
         </Grid.Col>
 
         <Grid.Col span={12}>
-          <UserCarouselVirtualized users={users} />
+          <CardUserList users={users} />
         </Grid.Col>
       </Grid>
     </>

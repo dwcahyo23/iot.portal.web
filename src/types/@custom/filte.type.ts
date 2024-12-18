@@ -27,9 +27,9 @@ export type ExcelApq = {
   nik_operator: string
   operator: string
   date: Date
-  avaibility: number
-  performance: number
-  quality: number
+  A: number
+  P: number
+  Q: number
   oee?: number
   com: string
 }
